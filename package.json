@@ -14,11 +14,7 @@
     "rnpm"
   ],
   "scripts": {
-    "compile": "rm -rf dist/* && babel . --out-dir dist --ignore node_modules,dist --source-maps",
-    "transpile": "npm run compile && cp src/basic/Icon/NBIcons.json dist/src/basic/Icon",
     "test": "jest",
-    "prepublish": "npm run transpile",
-    "postinstall": "node addEjectScript.js"
   },
   "jest": {
     "preset": "react-native",
@@ -66,7 +62,7 @@
   },
   "gitHead": "5bbeacc403ba97622703699132c55d8359344004",
   "homepage": "https://github.com/GeekyAnts/NativeBase#readme",
-  "main": "dist/src/index.js",
+  "main": "src/index.js",
   "optionalDependencies": {},
   "peerDependencies": {
     "react-native": ">=0.40.0",
