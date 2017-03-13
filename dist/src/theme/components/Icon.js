@@ -6,7 +6,7 @@ var _platform=require('./../variables/platform');var _platform2=_interopRequireD
 function(){var variables=arguments.length>0&&arguments[0]!==undefined?arguments[0]:_platform2.default;
 var iconTheme={
 fontSize:variables.iconFontSize,
-color:'#000'};
+color:variables.iconColor};
 
 
 
