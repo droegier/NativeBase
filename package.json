@@ -14,7 +14,7 @@
     "rnpm"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest"
   },
   "jest": {
     "preset": "react-native",
