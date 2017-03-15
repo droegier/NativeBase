@@ -30,9 +30,20 @@ class Item extends Component {
         return item;
       }
     });
-    if(_.has(inputProps,'value') && inputProps.value.length > 0) this.setState({ isFocused: true });
-    this.setState({text: inputProps.value});
+    if(inputProps.value && (inputProps.value.length > 0)) {
+      this.setState({ isFocused: true });
+      this.setState({text: inputProps.value});
+    }
+    else this.setState({ isFocused: false });
+  }
 
+  componentWillReceiveProps(nextProps) {
+    let newVal = nextProps.children[1].props.value;
+    let oldVal = this.props.children[1].props.value;
+    if(newVal!=oldVal) {
+      if(!newVal && !this._inputRef._root.isFocused() ) this.setState({ text: newVal, isFocused: false });
+      else this.setState({ text: newVal, isFocused: true });
+    }
   }
 
   componentDidMount() {
@@ -53,11 +64,11 @@ class Item extends Component {
 
   floatUp() {
     Animated.timing(this.state.topAnim, {
-      toValue: -22,
+      toValue: -15,
       duration: 150,
     }).start();
     Animated.timing(this.state.opacAnim, {
-      toValue: 0.7,
+      toValue: 0.8,
       duration: 150,
     }).start();
   }
@@ -73,9 +84,9 @@ class Item extends Component {
             key: 'newFLabel',
             float: true,
             style: {
-              fontSize: 15,
               lineHeight: 30,
               ...labelProps.style,
+              fontSize: 12
             }
           }
         ));
@@ -133,7 +144,7 @@ class Item extends Component {
     }
     else if (this.props.floatingLabel) {
         newChildren.push(<Animated.View key="float" style={{ position: 'absolute', left: (this.props.last) ? 15 : 0, right: 0, top: this.state.topAnim, opacity: this.state.opacAnim, paddingTop: (Platform.OS === 'ios') ? undefined : undefined, paddingBottom: (Platform.OS === 'ios') ? undefined : 12 }}><Label {...labelProps}>{this.renderLabel(label, labelProps)}</Label></Animated.View>);
-        newChildren.push(<Input ref={(c) => this._inputRef = c} value={this.state.text} key="l2" {...inputProps}  onFocus={() => {this.setState({ isFocused: true }); (inputProps.onFocus) && inputProps.onFocus()}} onBlur={() => {!(this.state.text.length) && this.setState({ isFocused: false }); (inputProps.onBlur) && inputProps.onBlur()}} onChangeText={text => {this.setState({ text }); (inputProps.onChangeText) && inputProps.onChangeText(text) }} />);
+        newChildren.push(<Input ref={(c) => this._inputRef = c} value={this.state.text} key="l2" {...inputProps}  onFocus={() => {this.setState({ isFocused: true }); (inputProps.onFocus) && inputProps.onFocus()}} onBlur={() => {!(this.state.text.length) && this.setState({ isFocused: false }); console.log('tetten'); (inputProps.onBlur) && inputProps.onBlur()}} onChangeText={text => {this.setState({ text }); (inputProps.onChangeText) && inputProps.onChangeText(text) }} />);
     }
     else if (this.props.stackedLabel && icon.length) {
       newChildren.push(<View key="s" style={{ flexDirection: 'row', flex: 1, width: variables.deviceWidth - 15 }}><Icon key="s1" {...iconProps} style={{ marginTop: 36 }} /><View style={{ flexDirection: 'column' }}><Label key="s2" {...labelProps}></Label><Input key="s3" {...inputProps} style={{ width: variables.deviceWidth - 40 }} /></View></View>);
