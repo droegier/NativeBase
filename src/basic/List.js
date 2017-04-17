@@ -12,9 +12,9 @@ class List extends Component {
       const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
       this.state = {
         dataSource: ds.cloneWithRows(props.dataArray)
-      } else {
-        this.state = {}
-      }
+      };
+    } else {
+        this.state = {};
     }
   }
   componentWillReceiveProps(nextProps) {
