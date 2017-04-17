@@ -1,14 +1,11 @@
 const React = require('react');
 const ReactNative = require('react-native');
-import { connectStyle, StyleProvider } from 'native-base-shoutem-theme';
-import variable from './../../theme/variables/platform';
-import { TabHeading, Text, TabContainer } from './../../index';
-import _ from 'lodash';
 const {
   View,
   Animated,
   StyleSheet,
   ScrollView,
+  Text,
   Platform,
   Dimensions,
 } = ReactNative;
@@ -28,12 +25,10 @@ const ScrollableTabBar = React.createClass({
     style: View.propTypes.style,
     tabStyle: View.propTypes.style,
     tabsContainerStyle: View.propTypes.style,
+    textStyle: Text.propTypes.style,
     renderTab: React.PropTypes.func,
     underlineStyle: View.propTypes.style,
     onScroll:React.PropTypes.func,
-  },
-  contextTypes: {
-    theme: React.PropTypes.object,
   },
 
   getDefaultProps() {
@@ -127,35 +122,25 @@ const ScrollableTabBar = React.createClass({
     }
   },
 
-  renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler, tabStyle, activeTabStyle, textStyle, activeTextStyle, tabHeaderStyle) {
-    const headerContent = (typeof name!=='string') ? name.props.children : undefined;
-    const { activeTextColor, inactiveTextColor } = this.props;
+  renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler) {
+    const { activeTextColor, inactiveTextColor, textStyle, } = this.props;
     const textColor = isTabActive ? activeTextColor : inactiveTextColor;
     const fontWeight = isTabActive ? 'bold' : 'normal';
 
-    if (typeof name==='string') {
-      return <Button
-        key={`${name}_${page}`}
-        onPress={() => onPressHandler(page)}
-        onLayout={onLayoutHandler}
-      >
-        <TabHeading scrollable style={(isTabActive) ? activeTabStyle : tabStyle} active={isTabActive}>
-          <Text style={(isTabActive) ? activeTextStyle : textStyle}>
-            {name}
-          </Text>
-        </TabHeading>
-      </Button>;
-    }
-    else {
-      return <Button
-        key={_.random(1.2, 5.2)}
-        onPress={() => onPressHandler(page)}
-        >
-        <TabHeading scrollable style={tabHeaderStyle} active={isTabActive}>
-          {headerContent}
-        </TabHeading>
-      </Button>
-    }
+    return <Button
+      key={`${name}_${page}`}
+      accessible={true}
+      accessibilityLabel={name}
+      accessibilityTraits='button'
+      onPress={() => onPressHandler(page)}
+      onLayout={onLayoutHandler}
+    >
+      <View style={[styles.tab, this.props.tabStyle, ]}>
+        <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
+          {name}
+        </Text>
+      </View>
+    </Button>;
   },
 
   measureTab(page, event) {
@@ -165,12 +150,11 @@ const ScrollableTabBar = React.createClass({
   },
 
   render() {
-    const variables = (this.context.theme) ? this.context.theme['@@shoutem.theme/themeStyle'].variables : variable;
     const tabUnderlineStyle = {
       position: 'absolute',
       height: 4,
-      backgroundColor: variables.topTabBarActiveBorderColor,
-      bottom: 0
+      backgroundColor: 'navy',
+      bottom: 0,
     };
 
     const dynamicTabUnderline = {
@@ -201,7 +185,7 @@ const ScrollableTabBar = React.createClass({
           {this.props.tabs.map((name, page) => {
             const isTabActive = this.props.activeTab === page;
             const renderTab = this.props.renderTab || this.renderTab;
-            return renderTab(name, page, isTabActive, this.props.goToPage, this.measureTab.bind(this, page), this.props.tabStyle[page], this.props.activeTabStyle[page], this.props.textStyle[page], this.props.activeTextStyle[page], this.props.tabHeaderStyle[page]);
+            return renderTab(name, page, isTabActive, this.props.goToPage, this.measureTab.bind(this, page));
           })}
           <Animated.View style={[tabUnderlineStyle, dynamicTabUnderline, this.props.underlineStyle, ]} />
         </View>
@@ -232,11 +216,8 @@ const ScrollableTabBar = React.createClass({
   },
 });
 
-// module.exports = ScrollableTabBar;
-const StyledTab = connectStyle('NativeBase.ScrollableTab', {}, mapPropsToStyleNames)(ScrollableTabBar);
-export {
-  StyledTab as ScrollableTab,
-};
+module.exports = ScrollableTabBar;
+
 const styles = StyleSheet.create({
   tab: {
     height: 49,

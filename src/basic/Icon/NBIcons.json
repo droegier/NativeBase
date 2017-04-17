@@ -121,7 +121,7 @@
   },
   "arrow-down": {
     "android": {
-      "default": "md-arrow-down",
+      "default": "md-arro-down",
       "active": "md-arrow-down"
     },
     "ios": {
