@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react';
 import { View, Modal, Platform } from 'react-native';
-import { connectStyle } from '@shoutem/theme';
+import { connectStyle } from 'native-base-shoutem-theme';
 import { Text } from './Text';
 import { Button } from './Button';
 import { ViewNB } from './View';
@@ -49,7 +49,11 @@ class ToastContainer extends Component {
         animationType={(this.state.position=='bottom') ? "slide" : "fade"}
         transparent={true}
         visible={this.state.modalVisible}
-        onRequestClose={() => {alert("Modal has been closed.")}}
+        onRequestClose={() => {
+          this.setState({
+            modalVisible: false
+          });
+        }}
         >
         <View style={{
             margin: (Platform.OS==='ios') ? 20 : 0,

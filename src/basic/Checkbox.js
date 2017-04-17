@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, Platform } from 'react-native';
 import IconNB from 'react-native-vector-icons/Ionicons';
-import { connectStyle } from '@shoutem/theme';
+import { connectStyle } from 'native-base-shoutem-theme';
 import mapPropsToStyleNames from '../Utils/mapPropsToStyleNames';
 import variable from '../theme/variables/platform';
 import _ from 'lodash';
@@ -14,6 +14,7 @@ class CheckBox extends Component {
   }
 
   getInitialStyle() {
+    const variable = (this.context.theme) ? this.context.theme['@@shoutem.theme/themeStyle'].variables : variable;
     return {
       checkStyle: {
         borderColor: this.props.color ? this.props.color : variable.checkboxBgColor,

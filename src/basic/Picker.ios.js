@@ -16,7 +16,7 @@ import { Title } from './Title';
 import { Left } from './Left';
 import { Right } from './Right';
 import { Body } from './Body';
-import { connectStyle } from '@shoutem/theme';
+import { connectStyle } from 'native-base-shoutem-theme';
 import computeProps from '../Utils/computeProps';
 
 import mapPropsToStyleNames from '../Utils/mapPropsToStyleNames';
@@ -25,21 +25,27 @@ class PickerNB extends Component {
 
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       modalVisible: false,
       currentLabel: this.getLabel(props),
-      dataSource: ds.cloneWithRows(this.props.children),
+      dataSource: props.children
     };
   }
 
   componentWillReceiveProps(nextProps) {
     const currentLabel = this.state.currentLabel;
     const nextLabel = this.getLabel(nextProps);
+    const currentDS = this.state.dataSource;
+    const nextDS = nextProps.children
 
     if (currentLabel !== nextLabel) {
       this.setState({
         currentLabel: nextLabel,
+      });
+    }
+    if (currentDS !== nextDS) {
+      this.setState({
+        dataSource: nextDS,
       });
     }
   }
@@ -83,7 +89,7 @@ class PickerNB extends Component {
         newChildren.push(child);
       }
     });
-    return <Header {...this.props.headerComponent.props} > {newChildren}</Header>;
+    return <Header {...this.props.headerComponent.props} >{newChildren}</Header>;
   }
 
   renderIcon() {
@@ -132,8 +138,8 @@ class PickerNB extends Component {
           <Container>
             {this.renderHeader()}
             <Content>
-              <ListView
-                dataSource={this.state.dataSource}
+              <List
+                dataArray={this.state.dataSource}
                 renderRow={child =>
                   <ListItem
                     selected={(child.props.value === this.props.selectedValue) ? true : false}
